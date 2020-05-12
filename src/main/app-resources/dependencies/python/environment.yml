@@ -1,0 +1,16 @@
+name: env_ewf_satcen_03_03_02
+channels:
+  - defaults
+  - https://conda.binstar.org/terradue
+  - conda-forge
+dependencies:
+  - python=3.7
+  - cioppy
+  - ipykernel
+  - app_descriptor_generator
+  - pytz
+  - pandas
+  - gdal
+  - geopandas
+  - geos
+prefix: /opt/anaconda/envs/env_ewf_satcen_03_03_02
