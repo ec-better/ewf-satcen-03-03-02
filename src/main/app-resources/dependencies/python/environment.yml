@@ -1,0 +1,25 @@
+name: env_ewf_satcen_03_03_02
+channels:
+  - defaults
+  - terradue
+  - https://conda.binstar.org/terradue
+  - conda-forge
+dependencies:
+  - python=3.6
+  - numpy=1.18.1
+  - numpy-base=1.18.1
+  - cioppy
+  - ipykernel=5.1.4
+  - app_descriptor_generator
+  - pytz
+  - pyproj=2.6.0
+  - pandas
+  - snap=7.0.0
+  - snappy=6.0
+  - sqlite=3.31.1
+  - gdal=3.0.2
+  - geopandas=0.6.1
+  - geos=3.8.0
+  - geotiff=1.5.1
+
+prefix: /opt/anaconda/envs/env_ewf_satcen_03_03_02
