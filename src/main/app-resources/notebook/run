@@ -1,6 +1,6 @@
 #!/opt/anaconda/envs/env_ewf_satcen_03_03_02/bin/python
 
-# Python version 3.7
+# Python version 3.6
 
 import sys
 
@@ -12,10 +12,11 @@ from nbconvert.preprocessors import ExecutePreprocessor, CellExecutionError
 import nbformat as nbf
 import uuid
 import ast
-import rpy2
-import rpy2.robjects as robjects
-from rpy2.robjects import r, pandas2ri
+# import rpy2
+# import rpy2.robjects as robjects
+# from rpy2.robjects import r, pandas2ri
 
+sys.path.append('/opt/anaconda/bin/')
 import cioppy
 ciop = cioppy.Cioppy()
 
@@ -24,9 +25,6 @@ SUCCESS = 0
 ERR_NB_RUNTIME=10
 
 references = []
-identifiers = []
-enclosures = []
-local_files = [] 
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -40,46 +38,62 @@ def clean_exit(exit_code):
  
     ciop.log(log_level, msg[exit_code])  
 
-def parametrize(identifier,reference):
+
+# def parametrize(reference):
+
+#     global nb
+        
+#     ts = ciop.getparam('ts')
+#     nc = ciop.getparam('nc')
+#     maxit = ciop.getparam('maxit')
+    
+#     nb.cells[0]['source'] = 's3_url = "%s"' % ( reference ) 
+#     nb.cells[8]['source'] = 'ts = %s' % (ts)  
+#     nb.cells[10]['source'] = 'nc = %s' % (nc)
+#     nb.cells[12]['source'] = 'maxit = %s' % (maxit)  
+
+
+
+def parametrize(reference):
     
     global nb
-    
-    if str(nb['metadata']['kernelspec']['language']) == 'R': # R
+    if str(nb['metadata']['kernelspec']['language']) == 'R':
+        
         pandas2ri.activate()
-    
         for index, cell in enumerate(nb['cells']):
-            if str(cell['cell_type']) == 'code':
 
-                if 'data_path <- ' in str(cell['source']):  
+            if str(cell['cell_type']) == 'code': 
+                
+                if 'data_path <- ' in str(cell['source']): 
                     ciop.log('INFO', 'cell {} updated with \'data_path\' value {}'.format(index, tmp_dir))
-                    cell['source'] =  'data_path <- \'{}\''.format(tmp_dir)
+                    cell['source'] = 'data_path <- \'{}\''.fomat(tmp_dir)
 
-                if 'input_identifier <- ' in str(cell['source']):
-                    ciop.log('INFO', 'cell {} updated with \'input_identifier\' value {}'.format(index, tmp_dir))
-                    cell['source'] =  'input_identifier <- \'{}\''.format(identifier)
-
-                if 'input_reference <- ' in str(cell['source']):  
-                    ciop.log('INFO', 'cell {} updated with \'input_reference\' value {}'.format(index, tmp_dir))
-                    cell['source'] =  'input_reference <- \'{}\''.format(reference)   
-
+                if 'input_identifier <- ' in str(cell['source']): 
+                    ciop.log('INFO', 'cell {} updated with \'input_identifier\' value {} '.format(index, identifier))
+                    cell['source'] = 'input_identifier <- \'{}\''.format(identifier)
+                
+                if 'input_reference <- ' in str(cell['source']): 
+                    ciop.log('INFO', 'cell {} updated with \'input_reference\' value {} '.format(index, identifier))
+                    cell['source'] = 'input_reference <- \'{}\''.format(reference)
+                
                 if '<- setNames(' in str(cell['source']):
 
-                        r_obj = robjects.r(str(cell['source']))
+                    r_obj = robjects.r(str(cell['source']))
 
-                        if 'title' in list(r_obj.columns) and 'abstract' in list(r_obj.columns) and 'id' in list(r_obj.columns) and 'value' in list(r_obj.columns):
-                            ciop.log('INFO', 'cell {} updated with parameter id {} with value {}'.format(index, 
-                                                                                                         r_obj.iloc[0].id, 
-                                                                                                         ciop.getparam(r_obj.iloc[0].id)))   
-                            
-                            r_obj.iloc[0].value = ciop.getparam(r_obj.iloc[0].id)
-                            
-                            cell['source'] = '''{} <- setNames(data.frame(rbind(c({}))), c({}))'''.format(cell['source'].split('<-')[0], 
-                                                                                                               ','.join(['"{}"'.format(x) for x in r_obj.values[0]]), 
-                                                                                                               ','.join(['"{}"'.format(x) for x in r_obj.keys()]))
+                    if 'title' in list(r_obj.columns) and 'abstract' in list(r_obj.columns) and 'id' in list(r_obj.columns) and 'value' in list(r_obj.columns):
+                        
+                        cell['source'] = '''{} <- setNames(data.frame(rbind(c('{}', '{}', '{}', '{}'))), c('id', 'title', 'abstract', 'value'))'''.format(str(cell['source']).split('<-')[0].strip(),
+                                                                    r_obj.iloc[0].id,
+                                                                    r_obj.iloc[0].title,
+                                                                    r_obj.iloc[0].abstract,
+                                                                    r_obj.iloc[0].value)
 
-                            
+                        ciop.log('INFO', 'cell {} {} updated' % (index, str(cell['source']).split('<-')[0].strip()))
+                        
+                
+                                     
     else: # Python
-        
+        print('lang for kernel is Py!')
         for index, cell in enumerate(nb['cells']):
 
             if str(cell['cell_type']) == 'code': 
@@ -91,16 +105,16 @@ def parametrize(identifier,reference):
                     if len(names) == 1:
 
                         if names[0] == 'data_path':
-                            ciop.log('INFO', 'cell {} updated with \'data_path\' value {}'.format(index, tmp_dir))
-                            cell['source'] = 'data_path = \'{}\''.format(tmp_dir)  
+                            ciop.log('INFO', 'cell %s updated with \'data_path\' value %s' % (index, tmp_dir))
+                            cell['source'] = 'data_path = \'%s\'' % tmp_dir  
 
                         if names[0] == 'input_identifier':
-                            ciop.log('INFO', 'cell {} updated with \'input_identifier\' value {}'.format(index, tmp_dir))
-                            cell['source'] = 'input_identifier = \'{}\''.format(identifier)  
+                            ciop.log('INFO', 'cell %s updated with \'input_identifier\' value %s' % (index, identifier))
+                            cell['source'] = 'input_identifier = \'%s\'' % identifier  
 
                         if names[0] == 'input_reference':
-                            ciop.log('INFO', 'cell {} updated with \'input_reference\' value {}'.format(index, reference))
-                            cell['source'] = 'input_reference = \'{}\''.format(reference)  
+                            ciop.log('INFO', 'cell %s updated with \'input_reference\' value %s' % (index, reference))
+                            cell['source'] = 'input_reference = \'%s\'' % reference  
 
                     if len(names) != 2:
                         continue
@@ -122,19 +136,20 @@ def parametrize(identifier,reference):
 
                             for i, keys in enumerate(eval(names[1])):
                                 if i == 0: 
-                                    new_source = new_source + '( "{}", "{}")' % (keys, eval(names[1])[keys]) 
+                                    new_source = new_source + '( "%s", "%s")' % (keys, eval(names[1])[keys]) 
                                 else:
-                                    new_source = new_source + ',( "{}", "{}")' % (keys, eval(names[1])[keys]) 
+                                    new_source = new_source + ',( "%s", "%s")' % (keys, eval(names[1])[keys]) 
 
                             new_source = new_source + '])'
 
-                            cell['source'] = '{} = {}'.format(names[1], new_source)
+                            cell['source'] = '%s = %s' % (names[1], new_source)
 
-                            ciop.log('INFO', 'cell {} {} updated'.format(index, names[1]))
+                            ciop.log('INFO', 'cell %s %s updated' % (index, names[1]))
 
                 except SyntaxError:
 
                     continue
+
 
 
     
@@ -187,7 +202,7 @@ def stage_in(reference):
     local_files.append(retrieved)    
   
 
-def execute(identifier, reference, nb_source, nb_target, kernel = 'python2'):
+def execute(reference, nb_source, nb_target, kernel = 'python2'):
     
     global nb
    
@@ -195,21 +210,20 @@ def execute(identifier, reference, nb_source, nb_target, kernel = 'python2'):
     
     ciop.log('INFO', 'Execute notebook')
     
-    parametrize(identifier, reference)
+    parametrize(reference)
     
     # execute the notebook
-    ep = ExecutePreprocessor(timeout=50000, kernel_name=kernel)
+    ep = ExecutePreprocessor(timeout=None, kernel_name=kernel)
 
     try:
         out = ep.preprocess(nb, {'metadata': {'path': './'}})
     except CellExecutionError:
         out = None
-        ciop.log('ERROR', 'Error executing the notebook "{}".'.format(nb_source))
+        ciop.log('ERROR', 'Error executing the notebook "%s".' % nb_source)
 
         with io.open(nb_target, 'wt') as file:
             nbf.write(nb, file)
 
-      
         ciop.publish(nb_target, metalink=True)
         raise
     finally:
@@ -220,12 +234,12 @@ def execute(identifier, reference, nb_source, nb_target, kernel = 'python2'):
                         if output['output_type'] == 'stream' and output['name'] == 'stderr':
                             sys.stderr.write(output['text'])
 
-
         ciop.log('INFO', 'Write notebook')  
+
         with io.open(nb_target, 'wt') as file:
             nbf.write(nb, file)
-
-
+            
+            
 def publish(runtime):
    
     # publish
@@ -239,6 +253,9 @@ def clean_up(runtime):
     # delete last retrieved file
     shutil.rmtree(local_files[-1])
         
+
+
+
 def main():
 
     # create the folder for the data stage-in
@@ -246,40 +263,28 @@ def main():
     tmp_dir = os.path.join('/tmp', 'workspace-' + str(uuid.uuid4()), 'data') 
     os.makedirs(tmp_dir)
 
-    os.environ['IPYTHONDIR'] = tmp_dir
-
     # Loops over all the inputs
     for reference in sys.stdin:
         references.append(reference.rstrip())
-    
-    for reference in references:
-               
-        stage_in(reference)
 
+    for reference in references:
+                    
         runtime = os.path.join(ciop.tmp_dir, str(uuid.uuid4()))    
 
         os.makedirs(runtime)
         os.chdir(runtime)
 
-        # create the reproducibility notebook for data stage-in
-        reproducibility(runtime, reference)
-
         # execute the notebook
         nb_source = os.path.join('/application', 'notebook', 'libexec', 'input.ipynb')
         nb_target = os.path.join(runtime, 'result.ipynb')  
-        
-        
-        execute(identifiers[-1], reference, nb_source, nb_target, 'env_ewf_satcen_03_03_02')  
-        
-        
+        execute(reference, nb_source, nb_target, 'env_ewf_satcen_03_03_02')  
+
         # publish
         publish(runtime)   
 
         # clean-up 
         clean_up(runtime)
 
-    # clean-up workspace folder
-    shutil.rmtree(os.path.split(tmp_dir)[0])
 try:
     main()
 except SystemExit as e:
@@ -288,5 +293,3 @@ except SystemExit as e:
     raise
 else:
     atexit.register(clean_exit, 0)
-
-
