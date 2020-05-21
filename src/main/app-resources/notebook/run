@@ -1,6 +1,6 @@
 #!/opt/anaconda/envs/env_ewf_satcen_03_03_02/bin/python
 
-# Python version 3.7
+# Python version 3.6
 
 import sys
 
@@ -12,9 +12,9 @@ from nbconvert.preprocessors import ExecutePreprocessor, CellExecutionError
 import nbformat as nbf
 import uuid
 import ast
-import rpy2
-import rpy2.robjects as robjects
-from rpy2.robjects import r, pandas2ri
+# import rpy2
+# import rpy2.robjects as robjects
+# from rpy2.robjects import r, pandas2ri
 
 import cioppy
 ciop = cioppy.Cioppy()
@@ -80,6 +80,7 @@ def parametrize(identifier,reference):
                             
     else: # Python
         
+        print('python kernel!')
         for index, cell in enumerate(nb['cells']):
 
             if str(cell['cell_type']) == 'code': 
