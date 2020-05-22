@@ -5,7 +5,6 @@
       <defaultParameters><parameter id="aoi" title="Area of interest" abstract="Area of interest in WKT or bounding box" maxOccurs="1" scope="runtime" type="LiteralData">POLYGON ((150.4704663611788 -34.65618387777952, 150.4704663611788 -34.95618387777952, 150.1704663611788 -34.95618387777952, 150.1704663611788 -34.65618387777952, 150.4704663611788 -34.65618387777952))</parameter></defaultParameters>
      <defaultJobconf>
         <property id="mapred.task.timeout">9900000000000</property>
-         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>
     </jobTemplate>
   </jobTemplates>

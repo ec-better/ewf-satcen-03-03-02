@@ -38,10 +38,9 @@ def clean_exit(exit_code):
            ERR_NB_RUNTIME: 'Failed to run notebook'
     }
  
-    ciop.log(log_level, msg[exit_code])  
+    ciop.log(log_level, msg[exit_code])
 
 
- 
 def reproducibility(path, reference):
     
     ciop.log('INFO', 'Create stage-in notebook for reproducibility')
@@ -150,8 +149,8 @@ def stage_in(reference):
 
     identifiers.append(search[0]['identifier'])
     enclosures.append(search[0]['enclosure'])
-    local_files.append(retrieved)    
-  
+    local_files.append(retrieved)
+
 
 def execute(identifier, reference, nb_source, nb_target, kernel = 'python2'):
     
