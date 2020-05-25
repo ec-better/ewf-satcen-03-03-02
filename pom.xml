@@ -108,7 +108,7 @@
                     <require>miniconda</require>
                   </requires>
                   <postinstallScriptlet combine.self="override">
-                    <script>/application/scripts/install/.postinstall</script>
+                    <script>/application/scripts/install/postinstall.sh</script>
                     <fileEncoding>utf-8</fileEncoding>
                   </postinstallScriptlet>
                 </configuration>
