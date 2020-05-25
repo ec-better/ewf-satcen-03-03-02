@@ -219,7 +219,8 @@ def execute(nb_source, nb_target, kernel = 'python2'):
     finally:
         ciop.log('INFO', 'Write notebook')  
         with io.open(nb_target, 'wt') as file:
-            file.write((nbf.writes(nb)).encode())
+            #file.write((nbf.writes(nb)).encode())
+            file.write((nbf.writes(nb)))
             file.close() 
 
             
@@ -290,42 +291,8 @@ def main():
 
     # clean-up workspace folder
     shutil.rmtree(os.path.split(tmp_dir)[0])
-try:
-    main()
-except SystemExit as e:
-    if e.args[0]:
-        clean_exit(e.args[0])
-    raise
-else:
-    atexit.register(clean_exit, 0)
-
-
-
     
-# create the folder for the data stage-in
-    global runtime
-    runtime = os.path.join(ciop.tmp_dir, str(uuid.uuid4()))    
-
-    ciop.log('DEBUG', 'The runtime folder is %s' % (runtime))
-    os.makedirs(runtime)
-    os.chdir(runtime) 
-
-    # Loops over all the inputs
-    for reference in sys.stdin:
-          references.append(reference.rstrip())
-
     
-    # execute the notebook
-    nb_source = os.path.join('/application', 'notebook', 'libexec', 'input.ipynb')
-    nb_target = os.path.join(runtime, 'result.ipynb')  
-    execute(nb_source, nb_target, 'python2')  
-    
-    # publish
-    publish()   
-   
-    # clean-up 
-    clean_up()
-
 try:
     main()
 except SystemExit as e:
