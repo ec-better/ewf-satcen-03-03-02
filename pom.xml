@@ -11,7 +11,7 @@
     <version>3.0.1-docker</version>
   </parent>
   <description>This is a short description</description>
-  <version>0.1</version>
+  <version>0.2</version>
   <properties>
     <summary>Sentinel-2 burned area identification</summary>
     <description>This is a short description</description>
@@ -108,7 +108,7 @@
                     <require>miniconda</require>
                   </requires>
                   <postinstallScriptlet combine.self="override">
-                    <script>/application/scripts/install/.postinstall</script>
+                    <script>/application/scripts/install/postinstall.sh</script>
                     <fileEncoding>utf-8</fileEncoding>
                   </postinstallScriptlet>
                 </configuration>
