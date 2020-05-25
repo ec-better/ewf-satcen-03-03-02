@@ -205,22 +205,22 @@ def execute(nb_source, nb_target, kernel = 'python2'):
     ep = ExecutePreprocessor(timeout=None, kernel_name=kernel)
 
     try:
-      out = ep.preprocess(nb, {'metadata': {'path': './'}})
+        out = ep.preprocess(nb, {'metadata': {'path': './'}})
     except CellExecutionError:
-      out = None
-      ciop.log('ERROR', 'Error executing the notebook "%s".' % nb_source)
+        out = None
+        ciop.log('ERROR', 'Error executing the notebook "%s".' % nb_source)
 
-      with io.open(nb_target, 'wb') as file:
-        file.write(nbf.writes(nb))
-        file.close()
-      
-      ciop.publish(nb_target, metalink=True)
-      raise
+        with io.open(nb_target, 'wt') as file:
+            file.write(nbf.writes(nb))
+            file.close()
+
+        ciop.publish(nb_target, metalink=True)
+        raise
     finally:
-      ciop.log('INFO', 'Write notebook')  
-      with io.open(nb_target, 'wb') as file:
-        file.write((nbf.writes(nb)).encode())
-        file.close() 
+        ciop.log('INFO', 'Write notebook')  
+        with io.open(nb_target, 'wt') as file:
+            file.write((nbf.writes(nb)).encode())
+            file.close() 
 
             
             
@@ -242,6 +242,16 @@ def main():
 
     # create the folder for the data stage-in
     global tmp_dir
+    
+    # SB testing purpose
+    try:
+        for d in [x for x in os.listdir('/tmp') if 'workspace' in x]:
+            ciop.log('DEBUG','Removing /tmp/{}'.format(d))
+            shutil.rmtree('/tmp/{}'.format(d))
+    except:
+        pass
+
+    
     tmp_dir = os.path.join('/tmp', 'workspace-' + str(uuid.uuid4()), 'data') 
     os.makedirs(tmp_dir)
 
@@ -256,27 +266,27 @@ def main():
         stage_in(reference)
 
 
-        runtime = os.path.join(ciop.tmp_dir, str(uuid.uuid4()))    
+    runtime = os.path.join(ciop.tmp_dir, str(uuid.uuid4()))    
 
-        os.makedirs(runtime)
-        os.chdir(runtime)
+    os.makedirs(runtime)
+    os.chdir(runtime)
 
-        # create the reproducibility notebook for data stage-in
-        reproducibility(runtime, reference)
+    # create the reproducibility notebook for data stage-in
+    reproducibility(runtime, reference)
 
-        # execute the notebook
-        nb_source = os.path.join('/application', 'notebook', 'libexec', 'input.ipynb')
-        nb_target = os.path.join(runtime, 'result.ipynb')  
-        
-        
-        execute(nb_source, nb_target, kernel ='env_ewf_satcen_03_03_02')  
-        
-        
-        # publish
-        publish(runtime)   
+    # execute the notebook
+    nb_source = os.path.join('/application', 'notebook', 'libexec', 'input.ipynb')
+    nb_target = os.path.join(runtime, 'result.ipynb')  
 
-        # clean-up 
-        clean_up(runtime)
+
+    execute(nb_source, nb_target, kernel ='env_ewf_satcen_03_03_02')  
+
+
+    # publish
+    publish(runtime)   
+
+    # clean-up 
+    clean_up(runtime)
 
     # clean-up workspace folder
     shutil.rmtree(os.path.split(tmp_dir)[0])
@@ -317,10 +327,10 @@ else:
     clean_up()
 
 try:
-  main()
+    main()
 except SystemExit as e:
-  if e.args[0]:
-    clean_exit(e.args[0])
-  raise
+    if e.args[0]:
+        clean_exit(e.args[0])
+    raise
 else:
-  atexit.register(clean_exit, 0)
+    atexit.register(clean_exit, 0)
