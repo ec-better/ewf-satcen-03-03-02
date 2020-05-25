@@ -60,18 +60,16 @@
         </plugins>
       </build>
     </profile>
-
     <profile>
       <id>package-app</id>
       <activation>
-         <property>
-           <name>env</name>
-           <value>ci</value>
-         </property>
+        <property>
+          <name>env</name>
+          <value>ci</value>
+        </property>
       </activation>
       <build>
         <plugins>
-
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
@@ -95,7 +93,6 @@
               </execution>
             </executions>
           </plugin>
-
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>rpm-maven-plugin</artifactId>
@@ -113,7 +110,7 @@
                   <postinstallScriptlet combine.self="override">
                     <script>/application/scripts/install/.postinstall</script>
                     <fileEncoding>utf-8</fileEncoding>
-                    </postinstallScriptlet>
+                  </postinstallScriptlet>
                 </configuration>
               </execution>
             </executions>
