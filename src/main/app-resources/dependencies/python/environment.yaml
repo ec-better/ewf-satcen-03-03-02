@@ -2,7 +2,6 @@ name: env_ewf_satcen_03_03_02
 channels:
   - defaults
   - terradue
-  - https://conda.binstar.org/terradue
   - conda-forge
 dependencies:
   - python=3.6
@@ -11,6 +10,7 @@ dependencies:
   - cioppy
   - ipykernel=5.1.4
   - app_descriptor_generator
+  - nbconvert
   - pytz
   - pyproj=2.6.0
   - pandas

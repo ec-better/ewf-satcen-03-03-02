@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="us-ascii"?>
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="application">
   <jobTemplates>
     <jobTemplate id="notebook">
       <streamingExecutable>/application/notebook/run</streamingExecutable>
-      <defaultParameters></defaultParameters>
+      <defaultParameters><parameter id="aoi" title="Area of interest" abstract="Area of interest in WKT or bounding box" maxOccurs="1" scope="runtime" type="LiteralData">POLYGON ((150.4704663611788 -34.65618387777952, 150.4704663611788 -34.95618387777952, 150.1704663611788 -34.95618387777952, 150.1704663611788 -34.65618387777952, 150.4704663611788 -34.65618387777952))</parameter></defaultParameters>
      <defaultJobconf>
         <property id="mapred.task.timeout">9900000000000</property>
         <property id="ciop.job.max.tasks">1</property> 
@@ -15,7 +14,7 @@
     <node id="notebook">
       <job id="notebook"/>
       <sources>
-        <source id="source" title="Input references" abstract="Input references" refid="string:list" scope="runtime"></source>
+        <source id="source" title="Input references" abstract="Input references" refid="string:list" scope="runtime">https://catalog.terradue.com/sentinel2/search?uid=S2A_MSIL2A_20191231T000241_N0213_R030_T56HKG_20191231T015159,https://catalog.terradue.com/sentinel2/search?uid=S2A_MSIL2A_20191201T000241_N0213_R030_T56HKG_20191201T020044</source>
       </sources>
     </node>
   </workflow>

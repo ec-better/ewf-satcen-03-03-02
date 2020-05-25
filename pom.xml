@@ -5,13 +5,11 @@
   <artifactId>ewf-satcen-03-03-02</artifactId>
   <packaging>pom</packaging>
   <name>ewf-satcen-03-03-02</name>
-
-    <parent>
+  <parent>
     <groupId>com.terradue</groupId>
     <artifactId>dcs-python-parent</artifactId>
-    <version>2.0.2</version>
+    <version>2.0.0</version>
   </parent>
-
   <description>This is a short description</description>
   <version>0.1</version>
   <properties>
@@ -62,18 +60,16 @@
         </plugins>
       </build>
     </profile>
-
     <profile>
       <id>package-app</id>
       <activation>
-         <property>
-           <name>env</name>
-           <value>ci</value>
-         </property>
+        <property>
+          <name>env</name>
+          <value>ci</value>
+        </property>
       </activation>
       <build>
         <plugins>
-
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
@@ -97,7 +93,6 @@
               </execution>
             </executions>
           </plugin>
-
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>rpm-maven-plugin</artifactId>
@@ -113,7 +108,8 @@
                     <require>miniconda</require>
                   </requires>
                   <postinstallScriptlet combine.self="override">
-                    <script></script>
+                    <script>/application/scripts/install/.postinstall</script>
+                    <fileEncoding>utf-8</fileEncoding>
                   </postinstallScriptlet>
                 </configuration>
               </execution>
