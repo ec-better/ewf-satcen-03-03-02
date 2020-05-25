@@ -6,3 +6,4 @@ target
 runc
 __pycache__
 *.properties
+*.json
