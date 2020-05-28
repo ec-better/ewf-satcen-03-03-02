@@ -1,4 +1,4 @@
-#!/opt/anaconda/bin/python
+#!/opt/anaconda/envs/env_ewf_satcen_03_03_02/bin/python
 
 import sys
 import os

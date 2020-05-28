@@ -2,7 +2,7 @@
   <jobTemplates>
     <jobTemplate id="notebook">
       <streamingExecutable>/application/notebook/run</streamingExecutable>
-      <defaultParameters><parameter id="aoi" title="Area of interest" abstract="Area of interest in WKT or bounding box" maxOccurs="1" scope="runtime" type="LiteralData">POLYGON ((150.4704663611788 -34.65618387777952, 150.4704663611788 -34.95618387777952, 150.1704663611788 -34.95618387777952, 150.1704663611788 -34.65618387777952, 150.4704663611788 -34.65618387777952))</parameter></defaultParameters>
+      <defaultParameters><parameter id="ndvi_threshold" title="NDVI difference threshold" abstract="NDVI difference threshold" maxOccurs="1" scope="runtime" type="LiteralData">0.19</parameter><parameter id="ndwi_threshold" title="NDWI difference threshold" abstract="NDWI difference threshold" maxOccurs="1" scope="runtime" type="LiteralData">0.18</parameter><parameter id="aoi" title="Area of interest" abstract="Area of interest in WKT or bounding box" maxOccurs="1" scope="runtime" type="LiteralData">POLYGON ((150.4704663611788 -34.65618387777952, 150.4704663611788 -34.95618387777952, 150.1704663611788 -34.95618387777952, 150.1704663611788 -34.65618387777952, 150.4704663611788 -34.65618387777952))</parameter></defaultParameters>
      <defaultJobconf>
         <property id="mapred.task.timeout">9900000000000</property>
         <property id="ciop.job.max.tasks">1</property> 
