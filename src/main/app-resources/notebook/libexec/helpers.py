@@ -1,6 +1,6 @@
 import cioppy
 import geopandas as gp
-import os
+import os, shutil
 import pandas as pd
 
 from shapely.geometry import box
@@ -184,7 +184,7 @@ def write_tif(layer, output_name, width, height, input_geotransform, input_geore
         
     output.SetGeoTransform(input_geotransform)
     output.SetProjection(input_georef)
-    output.GetRasterBand(1).WriteArray(layer),
+    output.GetRasterBand(1).WriteArray(layer)
 
     output.FlushCache()
     
@@ -225,3 +225,24 @@ def polygonize(input_tif, band, epsg):
     #os.remove(out_vector_file)
     
     return gdf
+
+
+def sieve_filter(input_file, output_file, pp_threshold):
+    
+    
+    ds = gdal.Open(input_file)
+    arr = ds.GetRasterBand(1).ReadAsArray()
+    [cols, rows] = arr.shape
+    
+    driver = gdal.GetDriverByName("GTiff")
+    output = driver.Create(output_file, rows, cols, 1, gdal.GDT_Byte)
+    
+    gdal.SieveFilter(ds.GetRasterBand(1), None, output.GetRasterBand(1), pp_threshold, 8)
+    
+    output.SetGeoTransform(ds.GetGeoTransform())
+    output.SetProjection(ds.GetProjectionRef())
+    
+    output.FlushCache()
+    ds.FlushCache()
+
+    
