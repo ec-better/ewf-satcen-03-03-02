@@ -236,11 +236,10 @@ def sieve_filter(input_file, output_file, pp_threshold):
     
     driver = gdal.GetDriverByName("GTiff")
     output = driver.Create(output_file, rows, cols, 1, gdal.GDT_Byte)
-    
-    gdal.SieveFilter(ds.GetRasterBand(1), None, output.GetRasterBand(1), pp_threshold, 8)
-    
     output.SetGeoTransform(ds.GetGeoTransform())
     output.SetProjection(ds.GetProjectionRef())
+    
+    gdal.SieveFilter(ds.GetRasterBand(1), None, output.GetRasterBand(1), pp_threshold, 8)
     
     output.FlushCache()
     ds.FlushCache()
