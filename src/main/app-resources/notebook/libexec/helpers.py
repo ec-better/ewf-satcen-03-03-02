@@ -227,21 +227,15 @@ def polygonize(input_tif, band, epsg):
     return gdf
 
 
+
 def sieve_filter(input_file, output_file, pp_threshold):
     
-    
+    shutil.copy(input_file,output_file)
     ds = gdal.Open(input_file)
-    arr = ds.GetRasterBand(1).ReadAsArray()
-    [cols, rows] = arr.shape
-    
-    driver = gdal.GetDriverByName("GTiff")
-    output = driver.Create(output_file, rows, cols, 1, gdal.GDT_Byte)
-    output.SetGeoTransform(ds.GetGeoTransform())
-    output.SetProjection(ds.GetProjectionRef())
+    output = gdal.Open(output_file,gdal.GA_Update)
     
     gdal.SieveFilter(ds.GetRasterBand(1), None, output.GetRasterBand(1), pp_threshold, 8)
     
     output.FlushCache()
     ds.FlushCache()
-
     
