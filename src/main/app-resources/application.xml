@@ -2,7 +2,7 @@
   <jobTemplates>
     <jobTemplate id="notebook">
       <streamingExecutable>/application/notebook/run</streamingExecutable>
-      <defaultParameters><parameter id="pp_threshold" title="Post Processing threshold in pixels" abstract="Number of pixels composing the isolated polygon to be removed (if 0 no post processing is applied)" maxOccurs="1" scope="runtime" type="LiteralData">3</parameter><parameter id="ndvi_threshold" title="NDVI difference threshold" abstract="NDVI difference threshold" maxOccurs="1" scope="runtime" type="LiteralData">0.19</parameter><parameter id="ndwi_threshold" title="NDWI difference threshold" abstract="NDWI difference threshold" maxOccurs="1" scope="runtime" type="LiteralData">0.18</parameter><parameter id="aoi" title="Area of interest" abstract="Area of interest in WKT or bounding box" maxOccurs="1" scope="runtime" type="LiteralData">POLYGON ((150.4704663611788 -34.65618387777952, 150.4704663611788 -34.95618387777952, 150.1704663611788 -34.95618387777952, 150.1704663611788 -34.65618387777952, 150.4704663611788 -34.65618387777952))</parameter></defaultParameters>
+      <defaultParameters><parameter id="pp_threshold" title="Post Processing threshold in pixels" abstract="Number of pixels composing the isolated polygon to be removed (if 0 no post processing is applied)" maxOccurs="1" scope="runtime" type="LiteralData">3</parameter><parameter id="ndvi_threshold" title="NDVI difference threshold" abstract="NDVI difference threshold" maxOccurs="1" scope="runtime" type="LiteralData">0.19</parameter><parameter id="ndwi_threshold" title="NDWI difference threshold" abstract="NDWI difference threshold" maxOccurs="1" scope="runtime" type="LiteralData">0.18</parameter><parameter id="aoi" title="Area of interest" abstract="Area of interest in WKT or bounding box" maxOccurs="1" scope="runtime" type="LiteralData">POLYGON((149.74042460751588  -34.29772543048931,150.93246853304504 -34.323665099129535, 150.90758708373184  -35.313155442237914,149.70124915286058 -35.28624837182783, 149.74042460751588 -34.29772543048931))</parameter></defaultParameters>
      <defaultJobconf>
         <property id="mapred.task.timeout">9900000000000</property>
         <property id="ciop.job.max.tasks">1</property> 
@@ -14,7 +14,7 @@
     <node id="notebook">
       <job id="notebook"/>
       <sources>
-        <source id="source" title="Input references" abstract="Input references" refid="string:list" scope="runtime">https://catalog.terradue.com/sentinel2/search?uid=S2A_MSIL2A_20191231T000241_N0213_R030_T56HKG_20191231T015159,https://catalog.terradue.com/sentinel2/search?uid=S2A_MSIL2A_20191201T000241_N0213_R030_T56HKG_20191201T020044</source>
+        <source id="source" title="Input references" abstract="Input references" refid="string:list" scope="runtime">https://catalog.terradue.com/sentinel2/search?uid=S2A_MSIL2A_20191101T000241_N0213_R030_T56HKG_20191101T020007,https://catalog.terradue.com/sentinel2/search?uid=S2A_MSIL2A_20200320T000241_N0214_R030_T56HKG_20200320T020042</source>
       </sources>
     </node>
   </workflow>
