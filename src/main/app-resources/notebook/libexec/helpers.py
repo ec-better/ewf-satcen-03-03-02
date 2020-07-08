@@ -238,4 +238,6 @@ def sieve_filter(input_file, output_file, pp_threshold):
     
     output.FlushCache()
     ds.FlushCache()
+    ds = None
+    ouput = None
     
