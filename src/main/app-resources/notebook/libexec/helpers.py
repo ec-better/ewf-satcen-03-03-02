@@ -187,34 +187,36 @@ def write_tif(layer, output_name, width, height, input_geotransform, input_geore
     output.GetRasterBand(1).WriteArray(layer)
 
     output.FlushCache()
+
+
+def polygonize(input_tif, band, epsg, mask=None):
     
-    
-def polygonize(input_tif, band, epsg):
-    
-    epsg_code = epsg
-    
+    epsg_code = int(epsg)
     srs = osr.SpatialReference()
-    srs.ImportFromEPSG(int(epsg_code))
+    srs.ImportFromEPSG(epsg_code)
 
     source_raster = gdal.Open(input_tif)
-    band = source_raster.GetRasterBand(band)
-    band_array = band.ReadAsArray()
+    band_source = source_raster.GetRasterBand(band)
+
+    source_mask = gdal.Open(mask)
+    band_mask = source_mask.GetRasterBand(1)
     
-
     out_vector_file = "polygonized.json"
-
     driver = ogr.GetDriverByName('GeoJSON')
 
-    out_data_source = driver.CreateDataSource(out_vector_file+ "")
-    out_layer = out_data_source.CreateLayer(out_vector_file, srs=srs)
+    out_data_source = driver.CreateDataSource(out_vector_file)
 
+    out_layer = out_data_source.CreateLayer(out_vector_file, srs=srs)
+    
     new_field = ogr.FieldDefn('change_detection', ogr.OFTInteger)
     out_layer.CreateField(new_field)
 
-    gdal.Polygonize(band, None, out_layer, 0, [], callback=None )
+    gdal.Polygonize(band_source, band_mask, out_layer, 0, [], callback=None)
 
     out_data_source = None
+    source_mask = None
     source_raster = None
+    
 
     data = json.loads(open(out_vector_file).read())
     gdf = gp.GeoDataFrame.from_features(data['features'])
@@ -225,7 +227,6 @@ def polygonize(input_tif, band, epsg):
     #os.remove(out_vector_file)
     
     return gdf
-
 
 
 def sieve_filter(input_file, output_file, pp_threshold):
