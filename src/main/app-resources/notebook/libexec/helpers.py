@@ -124,9 +124,8 @@ def resample2ref_band(product,reference_band):
     HashMap = snappy.jpy.get_type('java.util.HashMap')
     parameters = HashMap()
     parameters.put('referenceBand', reference_band)
-    #product = snappy.GPF.createProduct('Resample', parameters, product)
-    #return product
-    return snappy.GPF.createProduct('Resample', parameters, product)
+    product = snappy.GPF.createProduct('Resample', parameters, product)
+    return product
 
 
 def subset_to_aoi_reduce_bands(product,wkt,req_bands):
@@ -142,9 +141,8 @@ def subset_to_aoi_reduce_bands(product,wkt,req_bands):
     parameters.put('fullSwath', 'false')
     parameters.put('tiePointGridNames', '')
     parameters.put('copyMetadata', 'true')
-    #subset = snappy.GPF.createProduct('Subset', parameters, product)
-    #return subset
-    return snappy.GPF.createProduct('Subset', parameters, product)
+    subset = snappy.GPF.createProduct('Subset', parameters, product)
+    return subset
 
 def snap_rgb(product,rgb_band_list,output_name):
     
