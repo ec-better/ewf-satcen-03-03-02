@@ -1,9 +1,9 @@
-.ipynb_checkpoints
+*.ipynb_checkpoints
+__pycache__
 target
 *.data
 *.dim
 *.tif
 runc
-__pycache__
 *.properties
 *.json
