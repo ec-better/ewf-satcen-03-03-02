@@ -75,9 +75,6 @@ def write_RGB(layers, output_tif, width, height, input_geotransform, input_geore
     ds = None
     
     
-    
-    
-    
 def polygonize(input_tif, poligonized_file, band, epsg, mask):
     
     epsg_code = epsg
@@ -117,7 +114,7 @@ def polygonize(input_tif, poligonized_file, band, epsg, mask):
     
     #os.remove(out_vector_file)
     
-    return gdf
+    return gdf    
 
 
 
